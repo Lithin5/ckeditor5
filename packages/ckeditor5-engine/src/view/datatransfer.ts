@@ -13,24 +13,32 @@ type DomDataTransfer = globalThis.DataTransfer;
  * A facade over the native [`DataTransfer`](https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer) object.
  */
 export default class DataTransfer {
-	/**
-	 * The array of files created from the native `DataTransfer#files` or `DataTransfer#items`.
-	 */
 	public readonly files: Array<File>;
 
-	/**
-	 * The native DataTransfer object.
-	 */
 	private _native: DomDataTransfer;
 
 	constructor( nativeDataTransfer: DomDataTransfer ) {
+		/**
+		 * The array of files created from the native `DataTransfer#files` or `DataTransfer#items`.
+		 *
+		 * @readonly
+		 * @member {Array.<File>} #files
+		 */
 		this.files = getFiles( nativeDataTransfer );
 
+		/**
+		 * The native DataTransfer object.
+		 *
+		 * @private
+		 * @member {DataTransfer} #_native
+		 */
 		this._native = nativeDataTransfer;
 	}
 
 	/**
 	 * Returns an array of available native content types.
+	 *
+	 * @returns {Array.<String>}
 	 */
 	public get types(): ReadonlyArray<string> {
 		return this._native.types;
@@ -39,11 +47,10 @@ export default class DataTransfer {
 	/**
 	 * Gets the data from the data transfer by its MIME type.
 	 *
-	 * ```ts
-	 * dataTransfer.getData( 'text/plain' );
-	 * ```
+	 *		dataTransfer.getData( 'text/plain' );
 	 *
-	 * @param type The MIME type. E.g. `text/html` or `text/plain`.
+	 * @param {String} type The MIME type. E.g. `text/html` or `text/plain`.
+	 * @returns {String}
 	 */
 	public getData( type: string ): string {
 		return this._native.getData( type );
@@ -52,7 +59,8 @@ export default class DataTransfer {
 	/**
 	 * Sets the data in the data transfer.
 	 *
-	 * @param type The MIME type. E.g. `text/html` or `text/plain`.
+	 * @param {String} type The MIME type. E.g. `text/html` or `text/plain`.
+	 * @param {String} data
 	 */
 	public setData( type: string, data: string ): void {
 		this._native.setData( type, data );
@@ -60,43 +68,39 @@ export default class DataTransfer {
 
 	/**
 	 * The effect that is allowed for a drag operation.
+	 *
+	 * @param {String} value
 	 */
-	public set effectAllowed( value: EffectAllowed ) {
+	public set effectAllowed( value: DomDataTransfer[ 'effectAllowed' ] ) {
 		this._native.effectAllowed = value;
 	}
 
-	public get effectAllowed(): EffectAllowed {
+	public get effectAllowed(): DomDataTransfer[ 'effectAllowed' ] {
 		return this._native.effectAllowed;
 	}
 
 	/**
 	 * The actual drop effect.
+	 *
+	 * @param {String} value
 	 */
-	public set dropEffect( value: DropEffect ) {
+	public set dropEffect( value: DomDataTransfer[ 'dropEffect' ] ) {
 		this._native.dropEffect = value;
 	}
 
-	public get dropEffect(): DropEffect {
+	public get dropEffect(): DomDataTransfer[ 'dropEffect' ] {
 		return this._native.dropEffect;
 	}
 
 	/**
 	 * Whether the dragging operation was canceled.
+	 *
+	 * @returns {Boolean}
 	 */
 	public get isCanceled(): boolean {
 		return this._native.dropEffect == 'none' || !!( this._native as any ).mozUserCancelled;
 	}
 }
-
-/**
- * The effect that is allowed for a drag operation.
- */
-export type EffectAllowed = DomDataTransfer[ 'effectAllowed' ];
-
-/**
- * The actual drop effect.
- */
-export type DropEffect = DomDataTransfer[ 'dropEffect' ];
 
 function getFiles( nativeDataTransfer: DomDataTransfer ): Array<File> {
 	// DataTransfer.files and items are array-like and might not have an iterable interface.

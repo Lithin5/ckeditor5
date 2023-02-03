@@ -494,7 +494,7 @@ export default class Conversion {
 				values: Array<TValues>;
 			};
 			view: Record<TValues, ElementDefinition>;
-			upcastAlso?: Record<TValues, ArrayOrItem<MatcherPattern>>;
+			upcastAlso?: Record<TValues, MatcherPattern>;
 			converterPriority?: PriorityString;
 		}
 	): void {

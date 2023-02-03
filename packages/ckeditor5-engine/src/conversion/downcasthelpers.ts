@@ -2506,7 +2506,7 @@ function createConsumer( model: NormalizedModelElementConfig ): ConsumerFunction
 // @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
 // @returns {Function} Exposed by writer as createSlot().
 function createSlotFactory( element: ModelElement, slotsMap: Map<ViewElement, Array<ModelNode>>, conversionApi: DowncastConversionApi ) {
-	return ( writer: DowncastWriter, modeOrFilter: string | SlotFilter ) => {
+	return ( writer: DowncastWriter, modeOrFilter: string | SlotFilter = 'children' ) => {
 		const slot = writer.createContainerElement( '$slot' );
 
 		let children: Array<ModelNode> | null = null;
